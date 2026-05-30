@@ -11,7 +11,7 @@ export function SiteFooter() {
             <img
               src={logo}
               alt="Café Eternal"
-              className="h-14 w-14 object-contain"
+              className="h-18 w-18 object-contain"
               style={{ filter: 'brightness(0) invert(1)' }}
             />
             <span className="font-display text-2xl tracking-wide text-white">Café Eternal</span>
