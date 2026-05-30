@@ -260,14 +260,27 @@ export default function HomePage() {
         </div>
 
         <div
-          className="marquee-mask mt-14 relative"
-          style={{
-            maskImage: 'linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%)',
+          className="scrollbar-hide mt-14 overflow-x-auto cursor-grab active:cursor-grabbing"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+          onMouseDown={(e) => {
+            const el = e.currentTarget
+            el.dataset.down = 'true'
+            el.dataset.startX = String(e.pageX - el.offsetLeft)
+            el.dataset.scrollLeft = String(el.scrollLeft)
+          }}
+          onMouseLeave={(e) => { e.currentTarget.dataset.down = 'false' }}
+          onMouseUp={(e) => { e.currentTarget.dataset.down = 'false' }}
+          onMouseMove={(e) => {
+            const el = e.currentTarget
+            if (el.dataset.down !== 'true') return
+            e.preventDefault()
+            const x = e.pageX - el.offsetLeft
+            const walk = (x - Number(el.dataset.startX)) * 1.5
+            el.scrollLeft = Number(el.dataset.scrollLeft) - walk
           }}
         >
-          <div className="marquee-track gap-6">
-            {[...specials, ...specials].map((s, i) => (
+          <div className="flex gap-6 px-6 w-max">
+            {specials.map((s, i) => (
               <div
                 key={`${s.name}-${i}`}
                 className="card-hover shrink-0 w-[280px] rounded-2xl overflow-hidden"
