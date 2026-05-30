@@ -47,7 +47,7 @@ export function SiteNav() {
             <img
               src={logo}
               alt="Café Eternal"
-              className="h-13 w-13 object-contain transition-all duration-300"
+              className="h-12 w-12 object-contain transition-all duration-300"
               style={{
                 filter: solid ? 'none' : 'brightness(0) invert(1)',
               }}
