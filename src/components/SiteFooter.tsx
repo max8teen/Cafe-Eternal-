@@ -11,10 +11,10 @@ export function SiteFooter() {
             <img
               src={logo}
               alt="Café Eternal"
-              className="h-11 w-11 object-contain"
+              className="h-14 w-14 object-contain"
               style={{ filter: 'brightness(0) invert(1)' }}
             />
-            <span className="font-display text-xl tracking-wide text-white">Café Eternal</span>
+            <span className="font-display text-2xl tracking-wide text-white">Café Eternal</span>
           </Link>
           <p className="mt-4 font-script text-2xl" style={{ color: 'var(--gold)' }}>Where comfort meets calm.</p>
         </div>
