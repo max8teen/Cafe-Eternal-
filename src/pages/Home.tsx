@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Star, MapPin, Clock } from 'lucide-react'
+import { useRef, useEffect } from 'react'
 import { SiteLayout } from '../components/SiteLayout'
 import { Reveal } from '../components/Reveal'
 
@@ -63,6 +64,83 @@ function GoldDivider() {
       <span className="h-px flex-1 max-w-[80px]" style={{ background: 'rgba(217,164,65,0.5)' }} />
       <SunOrnament size={18} />
       <span className="h-px flex-1 max-w-[80px]" style={{ background: 'rgba(217,164,65,0.5)' }} />
+    </div>
+  )
+}
+
+function SpecialsCarousel() {
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const autoRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const isDragging = useRef(false)
+  const startX = useRef(0)
+  const startScroll = useRef(0)
+
+  const stopAuto = () => {
+    if (autoRef.current) clearInterval(autoRef.current)
+  }
+
+  const startAuto = () => {
+    stopAuto()
+    autoRef.current = setInterval(() => {
+      const el = scrollRef.current
+      if (!el) return
+      el.scrollLeft += 1
+      if (el.scrollLeft >= el.scrollWidth / 2) el.scrollLeft = 0
+    }, 16)
+  }
+
+  useEffect(() => {
+    startAuto()
+    return () => stopAuto()
+  }, [])
+
+  return (
+    <div
+      ref={scrollRef}
+      className="mt-14 overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing select-none"
+      style={{
+        WebkitOverflowScrolling: 'touch',
+        maskImage: 'linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%)',
+        WebkitMaskImage: 'linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%)',
+      }}
+      onMouseEnter={stopAuto}
+      onMouseLeave={() => { isDragging.current = false; startAuto() }}
+      onMouseDown={(e) => {
+        isDragging.current = true
+        startX.current = e.pageX - (scrollRef.current?.offsetLeft ?? 0)
+        startScroll.current = scrollRef.current?.scrollLeft ?? 0
+      }}
+      onMouseUp={() => { isDragging.current = false }}
+      onMouseMove={(e) => {
+        if (!isDragging.current || !scrollRef.current) return
+        e.preventDefault()
+        const x = e.pageX - scrollRef.current.offsetLeft
+        scrollRef.current.scrollLeft = startScroll.current - (x - startX.current) * 1.5
+      }}
+      onTouchStart={stopAuto}
+      onTouchEnd={() => setTimeout(startAuto, 1500)}
+    >
+      <div className="flex gap-6 px-6 w-max">
+        {[...specials, ...specials].map((s, i) => (
+          <div
+            key={`${s.name}-${i}`}
+            className="card-hover shrink-0 w-[280px] rounded-2xl overflow-hidden"
+            style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
+          >
+            <div className="relative h-48 overflow-hidden">
+              <img src={s.img} alt={s.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 hover:scale-110" />
+              <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)' }} />
+              <span className="absolute top-3 right-3 rounded-full px-3 py-1 font-display text-sm font-semibold" style={{ background: 'var(--gold)', color: 'var(--ink)' }}>
+                {s.price}
+              </span>
+            </div>
+            <div className="p-5">
+              <h3 className="font-display text-xl" style={{ color: 'var(--cream)' }}>{s.name}</h3>
+              <p className="mt-2 font-body text-sm leading-relaxed" style={{ color: 'rgba(245,235,221,0.7)' }}>{s.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -259,60 +337,7 @@ export default function HomePage() {
           </Reveal>
         </div>
 
-        <div
-          className="marquee-mask mt-14 relative overflow-hidden"
-          style={{
-            maskImage: 'linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to right, transparent 0, black 6%, black 94%, transparent 100%)',
-          }}
-        >
-          <div
-            className="marquee-track gap-6 cursor-grab active:cursor-grabbing"
-            ref={(el) => {
-              if (!el) return
-              let isDown = false
-              let startX = 0
-              let scrollLeft = 0
-
-              el.addEventListener('mousedown', (e) => {
-                isDown = true
-                el.classList.add('paused')
-                startX = e.pageX - el.offsetLeft
-                scrollLeft = el.scrollLeft
-              })
-              el.addEventListener('mouseleave', () => { isDown = false; el.classList.remove('paused') })
-              el.addEventListener('mouseup', () => { isDown = false; el.classList.remove('paused') })
-              el.addEventListener('mousemove', (e) => {
-                if (!isDown) return
-                e.preventDefault()
-                const x = e.pageX - el.offsetLeft
-                el.scrollLeft = scrollLeft - (x - startX) * 1.5
-              })
-              el.addEventListener('touchstart', () => el.classList.add('paused'), { passive: true })
-              el.addEventListener('touchend', () => el.classList.remove('paused'))
-            }}
-          >
-            {[...specials, ...specials].map((s, i) => (
-              <div
-                key={`${s.name}-${i}`}
-                className="card-hover shrink-0 w-[280px] rounded-2xl overflow-hidden"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.1)' }}
-              >
-                <div className="relative h-48 overflow-hidden">
-                  <img src={s.img} alt={s.name} loading="lazy" className="h-full w-full object-cover transition-transform duration-700 hover:scale-110" />
-                  <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(0,0,0,0.6), transparent)' }} />
-                  <span className="absolute top-3 right-3 rounded-full px-3 py-1 font-display text-sm font-semibold" style={{ background: 'var(--gold)', color: 'var(--ink)' }}>
-                    {s.price}
-                  </span>
-                </div>
-                <div className="p-5">
-                  <h3 className="font-display text-xl" style={{ color: 'var(--cream)' }}>{s.name}</h3>
-                  <p className="mt-2 font-body text-sm leading-relaxed" style={{ color: 'rgba(245,235,221,0.7)' }}>{s.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <SpecialsCarousel />
 
         <div className="mt-12 text-center">
           <Link to="/menu" className="font-display uppercase tracking-wider-2 text-sm border-b pb-1" style={{ color: 'var(--gold)', borderColor: 'var(--gold)' }}>
@@ -406,12 +431,4 @@ export default function HomePage() {
               className="rounded-full border px-8 py-3 font-display uppercase tracking-wider-2 text-sm text-white transition-all hover:bg-white hover:text-[#1B1B1B]"
               style={{ borderColor: 'rgba(255,255,255,0.7)' }}
             >
-              Reserve on WhatsApp
-            </a>
-          </div>
-        </div>
-      </section>
-
-    </SiteLayout>
-  )
-}
+              Reserve on Wh
