@@ -83,6 +83,15 @@
 .scrollbar-hide::-webkit-scrollbar { display: none; }
 .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 
+/* Marquee specials */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-x 40s linear infinite;
+}
+.marquee-track.paused { animation-play-state: paused; }
+.marquee-mask:hover .marquee-track { animation-play-state: paused; }
+
 /* Card hover */
 .card-hover { transition: transform 0.4s ease, box-shadow 0.4s ease; }
 .card-hover:hover { transform: translateY(-4px) scale(1.02); box-shadow: 0 18px 40px -12px rgba(217,164,65,0.35); }
