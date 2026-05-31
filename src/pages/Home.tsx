@@ -431,4 +431,12 @@ export default function HomePage() {
               className="rounded-full border px-8 py-3 font-display uppercase tracking-wider-2 text-sm text-white transition-all hover:bg-white hover:text-[#1B1B1B]"
               style={{ borderColor: 'rgba(255,255,255,0.7)' }}
             >
-              Reserve on Wh
+              Reserve on WhatsApp
+            </a>
+          </div>
+        </div>
+      </section>
+
+    </SiteLayout>
+  )
+}
