@@ -11,15 +11,15 @@ function ScrollToTop() {
   return null
 }
 
-function PageTransition({ children }: { children: React.ReactNode }) {
-  const { pathname } = useLocation()
+export function PageFade({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null)
+  const { pathname } = useLocation()
 
   useLayoutEffect(() => {
     const el = ref.current
     if (!el) return
     el.style.opacity = '0'
-    el.style.transform = 'translateY(12px)'
+    el.style.transform = 'translateY(10px)'
     const raf = requestAnimationFrame(() => {
       el.style.transition = 'opacity 0.45s ease, transform 0.45s ease'
       el.style.opacity = '1'
@@ -28,25 +28,19 @@ function PageTransition({ children }: { children: React.ReactNode }) {
     return () => cancelAnimationFrame(raf)
   }, [pathname])
 
-  return (
-    <div ref={ref} style={{ willChange: 'opacity, transform' }}>
-      {children}
-    </div>
-  )
+  return <div ref={ref}>{children}</div>
 }
 
 export default function App() {
   return (
     <>
       <ScrollToTop />
-      <PageTransition>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/menu" element={<MenuPage />} />
-          <Route path="/gallery" element={<GalleryPage />} />
-          <Route path="/visit" element={<VisitPage />} />
-        </Routes>
-      </PageTransition>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/menu" element={<MenuPage />} />
+        <Route path="/gallery" element={<GalleryPage />} />
+        <Route path="/visit" element={<VisitPage />} />
+      </Routes>
     </>
   )
 }
