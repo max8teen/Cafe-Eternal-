@@ -34,7 +34,7 @@ export function SiteNav() {
   return (
     <>
       <header
-        className="fixed inset-x-0 top-0 z-50 transition-all duration-500"
+        className="fixed inset-x-0 top-0 z-[70] transition-all duration-500"
         style={{
           background: solid ? 'rgba(245,235,221,0.97)' : 'transparent',
           backdropFilter: solid ? 'blur(12px)' : 'none',
@@ -47,7 +47,7 @@ export function SiteNav() {
             <img
               src={logo}
               alt="Café Eternal"
-              className="h-12 w-12 object-contain transition-all duration-300"
+              className="h-11 w-11 object-contain transition-all duration-300"
               style={{
                 filter: solid ? 'none' : 'brightness(0) invert(1)',
               }}
@@ -109,7 +109,7 @@ export function SiteNav() {
 
       {/* Fullscreen mobile overlay */}
       <div
-        className="md:hidden fixed inset-0 z-40 flex flex-col items-center justify-center transition-all duration-500"
+        className="md:hidden fixed inset-0 z-[60] flex flex-col items-center justify-center transition-all duration-500"
         style={{
           background: 'rgba(27,27,27,0.97)',
           backdropFilter: 'blur(16px)',
